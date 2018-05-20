@@ -30,13 +30,13 @@ export default {
       console.log('Comprobando retencion...');
 
       this.$http.post('http://localhost:9090/aranceles', {
-        idEnvio: codigoEnvio,
-        cantidadPagar: precioAranceles,
+          idEnvio: this.codigoEnvio,
+          cantidadPagar: this.precioAranceles,
       })
       .then((response) => {
         this.$swal(
           'Estado de aranceles',
-          response.body.message,
+          response.data.message,
           'success'
         );
       })
