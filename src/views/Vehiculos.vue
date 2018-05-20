@@ -1,12 +1,12 @@
 <template>
   <div class="tab-content">
     <h1 class="font-sans text-grey-darkest my-8">Gestión de vehículos</h1>
-    <div>
+    <div class="mb-4">
       <div class="relative mb-4">
         <label :class="classes.label">
           Seleccionar vehículo
-          <select :class="classes.select">
-            <option v-for="vehiculo in vehiculos" :key="vehiculo.id" :value="vehiculo.id">
+          <select :class="classes.select" v-model="seleccionado" @change="estadoVehiculo">
+            <option v-for="vehiculo in vehiculos" :key="vehiculo.id" :value="vehiculo">
               {{ vehiculo.marca }} {{ vehiculo.modelo }} ({{ vehiculo.matricula }})
             </option>
           </select>
@@ -18,6 +18,25 @@
 
       <button @click="seleccionarVehiculo" :class="classes.btn">
         Seleccionar
+      </button>
+    </div>
+    <div>
+      <div class="relative mb-4">
+        <label :class="classes.label">
+          Informar de avería
+          <select :class="classes.select" v-model="seleccionado">
+            <option v-for="vehiculo in vehiculos" :key="vehiculo.id" :value="vehiculo">
+              {{ vehiculo.marca }} {{ vehiculo.modelo }} ({{ vehiculo.matricula }})
+            </option>
+          </select>
+        </label>
+        <div class="pointer-events-none absolute pin-y pin-r flex items-center px-2 text-grey-darker">
+          <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+        </div>
+      </div>
+
+      <button @click="informarAveria" :class="classes.btn">
+        Informar
       </button>
     </div>
   </div>
@@ -38,16 +57,25 @@ export default {
 
       this.$http.get('http://localhost:9095/api/vehiculos')
       .then((response) => {
-        this.vehiculos = response.body.vehiculos;
+        this.vehiculos = response.data.vehiculos;
       })
       .catch((error) => {
         console.log('Error al obtener los vehiculos del API Kit');
       });
     },
+    estadoVehiculo() {
+      this.$http.get(`http://localhost:9090/vehiculos?idVehiculo=${this.seleccionado.id}`)
+      .then((response) => {
+        this.seleccionado.estado = response.data.estado;
+      })
+      .catch((error) => {
+        console.log('Error al obtener el estado del vehiculo del API Kit');
+      });
+    },
     seleccionarVehiculo() {
       console.log('Seleccionando vehiculo...');
 
-      const estado = 'D';
+      const estado = this.seleccionado.estado;
 
       if (estado === 'A') {
         this.$swal({
@@ -85,6 +113,18 @@ export default {
         );
       }
     },
+    informarAveria() {
+      this.$http.put(`http://localhost:9090/estado?idVehiculo=${this.seleccionado.id}&estado=A`)
+      .then((response) => {
+        this.seleccionado.estado = 'A';
+
+        this.$swal({
+          title: 'Informe de avería',
+          text: 'El vehículo se ha marcado como averiado',
+          type: 'success',
+        });
+      });
+    }
   },
 };
 </script>

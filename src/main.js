@@ -10,6 +10,7 @@ import VueSweetalert2 from 'vue-sweetalert2';
 Vue.use(VueSweetalert2);
 
 Vue.config.productionTip = false;
+Vue.http = Vue.prototype.$http = axios;
 
 Vue.mixin({
   data: function() {
@@ -35,7 +36,6 @@ Vue.filter('capitalize', (string) => {
 new Vue({
   el: '#app',
   router,
-  http: axios,
   components: { App },
   template: '<App/>',
   // data: () => ({
