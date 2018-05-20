@@ -44,12 +44,19 @@ export default {
     seguirPaquete() {
       console.log('Seguimiento paquete...');
 
-      this.$http.get(`http://localhost:9090/entradaSeguimiento?numeroTracking=${codigoEnvio}`)
+      this.$http.get(`http://localhost:9090/entradaSeguimiento?numeroTracking=${this.codigoEnvio}`)
       .then((response) => {
-        this.seguimiento = response.body.seguimiento;
+        this.seguimiento = response.data.seguimiento;
       })
       .catch((error) => {
-        console.log('Error al obtener el seguimiento del paquete');
+        this.seguimiento = [],
+        console.log('Error al obtener el seguimiento del paquete', error);
+
+        this.$swal({
+          title: 'No se encontró',
+          text: 'El envío no existe o no tiene seguimiento',
+          type: 'error',
+        });
       });
     },
   },
