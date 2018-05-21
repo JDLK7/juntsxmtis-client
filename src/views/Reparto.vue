@@ -35,15 +35,8 @@
       <div class="relative mb-4">
         <label :class="classes.label">
           Cliente
-          <select :class="classes.select" v-model="cliente">
-            <option v-for="cliente in clientes" :key="cliente.email" :value="cliente.email">
-              {{ cliente.email }}
-            </option>
-          </select>
+          <input v-model="cliente" :class="classes.input" type="text" placeholder="ej@ejemplo.com">
         </label>
-        <div class="pointer-events-none absolute pin-y pin-r flex items-center px-2 text-grey-darker">
-          <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
-        </div>
       </div>
       <button @click="repartir" :class="classes.btn">
         Repartir
@@ -66,17 +59,17 @@ export default {
     repartir() {
       console.log('Repartir...');
 
-      this.$http.get(`http://localhost:9090/envio?numeroTracking=${codigoEnvio}`, {
-        origen,
-        destino,
-        calleOrigen,
-        calleDestino,
-        cliente
+      this.$http.post(`http://localhost:9090/envio?numeroTracking=${this.codigoEnvio}`, {
+        origen: this.ciudadOrigen,
+        destino: this.ciudadDestino,
+        calleOrigen: this.calleOrigen,
+        calleDestino: this.calleDestino,
+        cliente: this.cliente,
       })
       .then((response) => {
         this.$swal({
           title: 'Reparto en proceso',
-          text: response.body.mensaje,
+          text: response.data.mensaje,
           type: 'success',
         });
       });
