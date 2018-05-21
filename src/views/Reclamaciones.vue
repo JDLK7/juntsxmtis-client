@@ -17,6 +17,18 @@
         Estado reclamacion:
         <span class="font-normal">{{ reclamacion.estadoReclamacion }}</span>
       </label>
+      <label :class="classes.label">
+        Atendida:
+        <span class="font-normal">{{ reclamacion.atendida }}</span>
+      </label>
+      <label :class="classes.label">
+        Pagada:
+        <span class="font-normal">{{ reclamacion.pagada }}</span>
+      </label>
+      <label :class="classes.label">
+        ID reclamación:
+        <span class="font-normal">{{ reclamacion.idReclamacion }}</span>
+      </label>
     </div>
 
     <!-- <div class="p-4 mb-4 bg-grey-lighter">
@@ -99,35 +111,22 @@ export default {
   },
   methods: {
     emitirReclamacion() {
-      this.$swal('Éxitos', 'Reclamación emitida', 'success');
-
-      this.$http.get('http://localhost:9090/reclamacion', {
-        idEnvio: codigoEnvio,
+      this.$http.post('http://localhost:9090/reclamacion', {
+        idEnvio: this.codigoEnvio,
       })
       .then((response) => {
-        this.reclamacion = response.body;
+        if (parseInt(response.data.idReclamacion) === -1) {
+          this.reclamacion = null;
+
+          this.$swal({
+            title: 'No se encontró',
+            text: response.data.message,
+            type: 'error',
+          });
+        } else {
+          this.reclamacion = response.data;
+        }
       });
-    },
-    verReclamacion() {
-      this.hasReclamacion = !this.hasReclamacion;
-
-      // this.$http.get(`http://localhost:9090/flujo1`)
-      // .then((response) => {
-
-      // })
-      // .catch((error) => {
-
-      // });
-    },
-    pagarIndemnizacion() {
-      this.$swal('Éxitos', 'Indemnización pagada', 'success');
-      // this.$http.get(`http://localhost:9090/flujo1`)
-      // .then((response) => {
-
-      // })
-      // .catch((error) => {
-
-      // });
     },
   },
 };
