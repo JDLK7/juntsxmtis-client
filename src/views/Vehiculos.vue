@@ -5,11 +5,19 @@
       <div class="relative mb-4">
         <label :class="classes.label">
           Seleccionar vehículo
-          <select :class="classes.select" v-model="seleccionado" @change="estadoVehiculo">
-            <option v-for="vehiculo in vehiculos" :key="vehiculo.id" :value="vehiculo">
-              {{ vehiculo.marca }} {{ vehiculo.modelo }} ({{ vehiculo.matricula }})
-            </option>
-          </select>
+          <template v-if="hasVehiculos">
+            <select :class="classes.select" v-model="seleccionado" @change="estadoVehiculo">
+              <option :value="null">Seleccionar vehiculo</option>
+              <option v-for="vehiculo in vehiculos" :key="vehiculo.id" :value="vehiculo">
+                {{ vehiculo.marca }} {{ vehiculo.modelo }} ({{ vehiculo.matricula }})
+              </option>
+            </select>
+          </template>
+
+          <div v-else :class="classes.select">
+            No hay vehiculos registrados
+          </div>
+
         </label>
         <div class="pointer-events-none absolute pin-y pin-r flex items-center px-2 text-grey-darker">
           <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
@@ -24,11 +32,19 @@
       <div class="relative mb-4">
         <label :class="classes.label">
           Informar de avería
-          <select :class="classes.select" v-model="seleccionado">
-            <option v-for="vehiculo in vehiculos" :key="vehiculo.id" :value="vehiculo">
-              {{ vehiculo.marca }} {{ vehiculo.modelo }} ({{ vehiculo.matricula }})
-            </option>
-          </select>
+          <template v-if="hasVehiculos">
+            <select :class="classes.select" v-model="seleccionado">
+              <option :value="null">Seleccionar vehiculo</option>
+              <option v-for="vehiculo in vehiculos" :key="vehiculo.id" :value="vehiculo">
+                {{ vehiculo.marca }} {{ vehiculo.modelo }} ({{ vehiculo.matricula }})
+              </option>
+            </select>
+          </template>
+
+          <div v-else :class="classes.select">
+            No hay vehiculos registrados
+          </div>
+
         </label>
         <div class="pointer-events-none absolute pin-y pin-r flex items-center px-2 text-grey-darker">
           <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
@@ -48,6 +64,11 @@ export default {
     vehiculos: [],
     seleccionado: null,
   }),
+  computed: {
+    hasVehiculos() {
+      return this.vehiculos.length > 0;
+    },
+  },
   beforeMount() {
     this.getVehiculos();
   },

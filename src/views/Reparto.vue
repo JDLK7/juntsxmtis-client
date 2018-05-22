@@ -32,13 +32,13 @@
           <input v-model="calleDestino" :class="classes.input" type="text" placeholder="Ej. C/ Italia, 22">
         </label>
       </div>
-
       <div class="relative mb-4">
         <label :class="classes.label">
           Cliente
 
           <template v-if="hasClientes">
             <select :class="classes.select" v-model="cliente">
+              <option :value="null">Seleccionar cliente</option>
               <option v-for="cli in clientes" :key="cli.email" :value="cli">
                 {{ cli.nombre }} {{ cli.apellidos }} ({{ cli.email }})
               </option>
