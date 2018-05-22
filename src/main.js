@@ -21,6 +21,7 @@ Vue.mixin({
           input: 'shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker',
           select: 'block appearance-none w-full bg-grey-lighter border border-grey-lighter text-grey-darker py-3 px-4 pr-8 rounded',
           btn: 'flex-no-shrink bg-blue hover:bg-blue-light text-white font-bold py-2 px-4 border-b-4 border-blue-dark hover:border-blue rounded w-32',
+          btnDisabled: 'flex-no-shrink bg-blue hover:bg-blue-light text-white font-bold py-2 px-4 border-b-4 border-blue-dark hover:border-blue rounded w-32 opacity-50 cursor-not-allowed',
           link: 'h-full flex items-center text-center block border border-white rounded hover:border-grey-lighter text-blue hover:bg-grey-lighter py-2 px-4 no-underline',
         };
       }

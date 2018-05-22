@@ -32,15 +32,59 @@
           <input v-model="calleDestino" :class="classes.input" type="text" placeholder="Ej. C/ Italia, 22">
         </label>
       </div>
+
       <div class="relative mb-4">
         <label :class="classes.label">
           Cliente
-          <input v-model="cliente" :class="classes.input" type="text" placeholder="ej@ejemplo.com">
+
+          <template v-if="hasClientes">
+            <select :class="classes.select" v-model="cliente">
+              <option v-for="cli in clientes" :key="cli.email" :value="cli">
+                {{ cli.nombre }} {{ cli.apellidos }} ({{ cli.email }})
+              </option>
+            </select>
+            <div class="pointer-events-none absolute pin-y pin-r flex items-center px-2 text-grey-darker">
+              <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+            </div>
+          </template>
+
+          <div v-else :class="classes.select">
+            No hay clientes registrados
+          </div>
+
         </label>
       </div>
-      <button @click="repartir" :class="classes.btn">
-        Repartir
+
+      <button @click="envio" :disabled="!formCompleto" :class="[ formCompleto ? classes.btn : classes.btnDisabled ]">
+        Procesar
       </button>
+
+      <hr>
+
+      <h2 class="font-sans text-grey-darkest my-8">Proceso de reparto</h2>
+      <div class="flex items-center mb-4">
+        <label :class="classes.label">
+          Envío
+          <input v-model="codigoEnvio" :class="classes.input" type="number" placeholder="Código de envío">
+        </label>
+        <button @click="repartir" :class="classes.btn">
+          Repartir
+        </button>
+      </div>
+
+      <hr>
+
+      <h2 class="font-sans text-grey-darkest my-8">Proceso de entrega</h2>
+      <div class="flex items-center mb-4">
+        <label :class="classes.label">
+          Envío
+          <input v-model="codigoEnvio" :class="classes.input" type="number" placeholder="Código de envío">
+        </label>
+        <button @click="entregar" :class="classes.btn">
+          Entregar
+        </button>
+      </div>
+
     </div>
   </div>
 </template>
@@ -48,6 +92,7 @@
 <script>
 export default {
   data: () => ({
+    clientes: [],
     codigoEnvio: null,
     cliente: null,
     ciudadOrigen: null,
@@ -55,10 +100,19 @@ export default {
     calleOrigen: null,
     calleDestino: null,
   }),
+  computed: {
+    hasClientes() {
+      return this.clientes.length > 0;
+    },
+    formCompleto() {
+      return this.cliente && this.codigoEnvio && this.ciudadOrigen && this.ciudadDestino && this.calleOrigen && this.calleDestino;
+    }
+  },
+  beforeMount() {
+    this.getClientes();
+  },
   methods: {
-    repartir() {
-      console.log('Repartir...');
-
+    envio() {
       this.$http.post(`http://localhost:9090/envio?numeroTracking=${this.codigoEnvio}`, {
         origen: this.ciudadOrigen,
         destino: this.ciudadDestino,
@@ -72,6 +126,32 @@ export default {
           text: response.data.mensaje,
           type: 'success',
         });
+      });
+    },
+    repartir() {
+      this.$http.put(`http://localhost:9090/reparto?entrada=true&numeroTracking=${this.codigoEnvio}`)
+      .then((response) => {
+        this.$swal({
+          title: 'Paquete en reparto',
+          text: response.data.mensaje,
+          type: 'success',
+        });
+      });
+    },
+    entregar() {
+      this.$http.put(`http://localhost:9090/entrega?entregado=true&numeroTracking=${this.codigoEnvio}`)
+      .then((response) => {
+        this.$swal({
+          title: 'Paquete entregado',
+          text: response.data.mensaje,
+          type: 'success',
+        });
+      });
+    },
+    getClientes() {
+      this.$http.get('http://localhost:9090/api/clientes')
+      .then((response) => {
+        this.clientes = response.data;
       });
     },
   },
