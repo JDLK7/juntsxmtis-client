@@ -111,7 +111,7 @@ export default {
   },
   methods: {
     emitirReclamacion() {
-      this.$http.post('http://localhost:9090/reclamacion', {
+      this.$http.post(`${this.baseUrl}/reclamacion`, {
         idEnvio: this.codigoEnvio,
       })
       .then((response) => {

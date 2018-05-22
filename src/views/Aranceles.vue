@@ -29,7 +29,7 @@ export default {
     comprobarRetencion() {
       console.log('Comprobando retencion...');
 
-      this.$http.post('http://localhost:9090/aranceles', {
+      this.$http.post(`${this.baseUrl}/aranceles`, {
           idEnvio: this.codigoEnvio,
           cantidadPagar: this.precioAranceles,
       })

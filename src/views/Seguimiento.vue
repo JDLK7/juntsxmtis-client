@@ -44,7 +44,7 @@ export default {
     seguirPaquete() {
       console.log('Seguimiento paquete...');
 
-      this.$http.get(`http://localhost:9090/entradaSeguimiento?numeroTracking=${this.codigoEnvio}`)
+      this.$http.get(`${this.baseUrl}/entradaSeguimiento?numeroTracking=${this.codigoEnvio}`)
       .then((response) => {
         this.seguimiento = response.data.seguimiento;
       })

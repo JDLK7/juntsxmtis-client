@@ -113,7 +113,7 @@ export default {
   },
   methods: {
     envio() {
-      this.$http.post(`http://localhost:9090/envio?numeroTracking=${this.codigoEnvio}`, {
+      this.$http.post(`${this.baseUrl}/envio?numeroTracking=${this.codigoEnvio}`, {
         origen: this.ciudadOrigen,
         destino: this.ciudadDestino,
         calleOrigen: this.calleOrigen,
@@ -122,34 +122,34 @@ export default {
       })
       .then((response) => {
         this.$swal({
-          title: 'Reparto en proceso',
-          text: response.data.mensaje,
+          title: 'Proceso de envio',
+          text: 'Proceso de envio empezado correctamente',
           type: 'success',
         });
       });
     },
     repartir() {
-      this.$http.put(`http://localhost:9090/reparto?entrada=true&numeroTracking=${this.codigoEnvio}`)
+      this.$http.put(`${this.baseUrl}/reparto?entrada=true&numeroTracking=${this.codigoEnvio}`)
       .then((response) => {
         this.$swal({
           title: 'Paquete en reparto',
-          text: response.data.mensaje,
+          text: 'El paquete se encuentra en reparto',
           type: 'success',
         });
       });
     },
     entregar() {
-      this.$http.put(`http://localhost:9090/entrega?entregado=true&numeroTracking=${this.codigoEnvio}`)
+      this.$http.put(`${this.baseUrl}/entrega?entregado=true&numeroTracking=${this.codigoEnvio}`)
       .then((response) => {
         this.$swal({
           title: 'Paquete entregado',
-          text: response.data.mensaje,
+          text: 'El paquete se ha entregado correctamente',
           type: 'success',
         });
       });
     },
     getClientes() {
-      this.$http.get('http://localhost:9090/api/clientes')
+      this.$http.get('http://localhost:9095/api/clientes')
       .then((response) => {
         this.clientes = response.data;
       });

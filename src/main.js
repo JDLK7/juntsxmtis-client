@@ -15,6 +15,9 @@ Vue.http = Vue.prototype.$http = axios;
 Vue.mixin({
   data: function() {
     return {
+      get baseUrl() {
+        return 'http://localhost:9090';
+      },
       get classes() {
         return {
           label: 'block text-grey-darker text-sm font-bold mb-2 mr-2 w-full',

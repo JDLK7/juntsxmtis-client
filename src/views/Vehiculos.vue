@@ -85,7 +85,7 @@ export default {
       });
     },
     estadoVehiculo() {
-      this.$http.get(`http://localhost:9090/vehiculos?idVehiculo=${this.seleccionado.id}`)
+      this.$http.get(`${this.baseUrl}/vehiculos?idVehiculo=${this.seleccionado.id}`)
       .then((response) => {
         this.seleccionado.estado = response.data.estado;
       })
@@ -112,7 +112,7 @@ export default {
           if (result.value) {
             console.log('Enviando vehiculo a reparar...');
 
-            this.$http.get('http://localhost:9090/enviarVehiculo?idVehiculo=1&estado=D')
+            this.$http.get(`${this.baseUrl}/enviarVehiculo?idVehiculo=${this.seleccionado.id}&estado=D`)
             .then((response) => {
               this.$swal({
                 title: 'Vehículo enviado',
@@ -135,7 +135,7 @@ export default {
       }
     },
     informarAveria() {
-      this.$http.put(`http://localhost:9090/estado?idVehiculo=${this.seleccionado.id}&estado=A`)
+      this.$http.put(`${this.baseUrl}/estado?idVehiculo=${this.seleccionado.id}&estado=A`)
       .then((response) => {
         this.seleccionado.estado = 'A';
 
